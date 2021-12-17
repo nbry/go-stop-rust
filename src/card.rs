@@ -1,3 +1,4 @@
+#[derive(Debug)]
 pub struct Card {
     pub suit: Suit,
     pub category: Category,
@@ -17,6 +18,7 @@ pub trait Draw {
     fn draw(&mut self) -> Card;
 }
 
+#[derive(Debug)]
 pub enum Suit {
     Jan,
     Feb,
@@ -32,6 +34,7 @@ pub enum Suit {
     Dec,
 }
 
+#[derive(Debug)]
 pub enum Category {
     Bright,
     Ribbon,
@@ -40,6 +43,7 @@ pub enum Category {
     JunkAnimal,
 }
 
+#[derive(Debug)]
 pub enum Special {
     RedLabel,
     BlueLabel,
