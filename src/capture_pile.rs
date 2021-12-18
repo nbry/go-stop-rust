@@ -1,9 +1,14 @@
 use crate::card::{Card, Category, Special, Suit};
 
 #[derive(Debug)]
-pub struct CardCollection {
+pub struct CapturePile {
     pub points: i32,
-    sep_animal_is_junk: bool,
+    pub sep_animal_is_junk: bool,
+    // These flags might not be needed when multipliers.rs is implemented
+    pub seven_animals: bool,
+    pub missing_bright: bool,
+    pub under_junk_threshold: bool,
+    stolen: Vec<Card>,
     animals: Vec<Card>,
     brights: Vec<Card>,
     junk: Vec<Card>,
@@ -11,11 +16,15 @@ pub struct CardCollection {
     ribbons: Vec<Card>,
 }
 
-impl CardCollection {
-    pub fn new() -> CardCollection {
-        CardCollection {
+impl CapturePile {
+    pub fn new() -> CapturePile {
+        CapturePile {
             points: 0,
             sep_animal_is_junk: false,
+            seven_animals: false,
+            missing_bright: true,
+            under_junk_threshold: false,
+            stolen: Vec::new(),
             animals: Vec::new(),
             brights: Vec::new(),
             junk: Vec::new(),
@@ -24,7 +33,29 @@ impl CardCollection {
         }
     }
 
-    pub fn add_card(&mut self, card: Card) {
+    pub fn set_sep_animal_is_junk(&mut self, is_junk: bool) {
+        self.sep_animal_is_junk = is_junk;
+    }
+
+    pub fn resolve_stolen(&mut self) {
+        while self.stolen.len() > 0 {
+            let stolen_card = self
+                .stolen
+                .pop()
+                .expect("Expected a card in the stolen stack");
+
+            self.add_card(stolen_card);
+        }
+    }
+
+    pub fn add_cards(&mut self, cards: Vec<Card>) {
+        for card in cards {
+            self.add_card(card);
+        }
+        self.update();
+    }
+
+    fn add_card(&mut self, card: Card) {
         match card.category {
             Category::Animal => self.animals.push(card),
             Category::Bright => self.brights.push(card),
@@ -34,17 +65,23 @@ impl CardCollection {
         }
     }
 
-    pub fn set_junk_animal_is_junk(&mut self, is_junk: bool) {
-        self.sep_animal_is_junk = is_junk;
-    }
-
-    pub fn update_score(&mut self) {
+    fn update(&mut self) {
         let mut points = 0;
-        points += self.count_animal_points();
-        points += self.count_brights_points();
-        points += self.count_junk_points();
         points += self.count_ribbons_points();
-        self.points = points
+
+        let animal_points = self.count_animal_points();
+        self.seven_animals = animal_points >= 7;
+        points += animal_points;
+
+        let bright_points = self.count_brights_points();
+        self.missing_bright = bright_points == 0;
+        points += bright_points;
+
+        let junk_points = self.count_junk_points();
+        self.under_junk_threshold = junk_points > 0 && junk_points < 7;
+        points += junk_points;
+
+        self.points = points;
     }
 
     fn count_animal_points(&self) -> i32 {

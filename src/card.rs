@@ -18,7 +18,7 @@ pub trait Draw {
     fn draw(&mut self) -> Card;
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Suit {
     Jan,
     Feb,
