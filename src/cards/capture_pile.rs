@@ -1,13 +1,9 @@
-use crate::card::{Card, Category, Special, Suit};
+use crate::cards::card::{Card, Category, Special, Suit};
 
 #[derive(Debug)]
 pub struct CapturePile {
     pub points: i32,
     pub sep_animal_is_junk: bool,
-    // These flags might not be needed when multipliers.rs is implemented
-    pub seven_animals: bool,
-    pub missing_bright: bool,
-    pub under_junk_threshold: bool,
     stolen: Vec<Card>,
     animals: Vec<Card>,
     brights: Vec<Card>,
@@ -21,9 +17,6 @@ impl CapturePile {
         CapturePile {
             points: 0,
             sep_animal_is_junk: false,
-            seven_animals: false,
-            missing_bright: true,
-            under_junk_threshold: false,
             stolen: Vec::new(),
             animals: Vec::new(),
             brights: Vec::new(),
@@ -48,6 +41,20 @@ impl CapturePile {
         }
     }
 
+    pub fn remove_junk_card(&mut self) -> Option<Card> {
+        let removed_card = if self.junk.len() > 0 {
+            self.junk.pop()
+        } else {
+            self.junk_animal.pop()
+        };
+
+        removed_card
+    }
+
+    // Refactor to add_capture (capture: Capture)".
+    // - use add cards for matches
+    // - use resolve stolen for steals
+
     pub fn add_cards(&mut self, cards: Vec<Card>) {
         for card in cards {
             self.add_card(card);
@@ -66,22 +73,10 @@ impl CapturePile {
     }
 
     fn update(&mut self) {
-        let mut points = 0;
-        points += self.count_ribbons_points();
-
-        let animal_points = self.count_animal_points();
-        self.seven_animals = animal_points >= 7;
-        points += animal_points;
-
-        let bright_points = self.count_brights_points();
-        self.missing_bright = bright_points == 0;
-        points += bright_points;
-
-        let junk_points = self.count_junk_points();
-        self.under_junk_threshold = junk_points > 0 && junk_points < 7;
-        points += junk_points;
-
-        self.points = points;
+        self.points += self.count_ribbons_points();
+        self.points += self.count_animal_points();
+        self.points += self.count_brights_points();
+        self.points += self.count_junk_points();
     }
 
     fn count_animal_points(&self) -> i32 {

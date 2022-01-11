@@ -1,11 +1,10 @@
-use go_stop_rust::{active_cards, capture_pile, card, deck};
-
-use card::{Card, Draw};
-use deck::Deck;
-use go_stop_rust::card::Suit;
+use go_stop_rust::cards::active::ActiveCards;
+use go_stop_rust::cards::card::{Card, Suit};
+use go_stop_rust::cards::deck::Deck;
+use go_stop_rust::cards::{capture_pile, card, deck};
 
 #[test]
-fn test_count_points_for_entire_deck() {
+fn count_points_for_entire_deck() {
     let mut deck = Deck::new(true);
     let mut stack_of_cards: Vec<Card> = Vec::new();
 
@@ -13,7 +12,7 @@ fn test_count_points_for_entire_deck() {
     captures.set_sep_animal_is_junk(true);
 
     for _i in 0..48 {
-        let card = Draw::draw(&mut deck);
+        let card = deck.draw();
         stack_of_cards.push(card);
     }
 
@@ -23,14 +22,14 @@ fn test_count_points_for_entire_deck() {
 }
 
 #[test]
-fn test_active_cards() {
+fn active_cards() {
     let mut the_deck = Deck::new(false);
     let mut stack_of_cards: Vec<Card> = Vec::new();
-    let mut river = active_cards::ActiveCards::new();
+    let mut river = ActiveCards::new();
 
     // Un-shuffled deck... so first 4 cards are December cards
     for _i in 0..4 {
-        let card = Draw::draw(&mut the_deck);
+        let card = the_deck.draw();
         stack_of_cards.push(card);
     }
 

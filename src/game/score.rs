@@ -1,33 +1,3 @@
-use crate::active_cards::ActiveCards;
-use crate::deck::Deck;
-use crate::player::Player;
-
-struct GameState {
-    players: Vec<Player>,
-    whose_turn: i32,
-    deck: Deck,
-    river: ActiveCards,
-}
-
-impl GameState {
-    pub fn new() -> GameState {
-        GameState {
-            players: Vec::new(),
-            whose_turn: 0,
-            deck: Deck::new(true),
-            river: ActiveCards::new(),
-        }
-    }
-
-    pub fn add_player(&mut self, name: String) {
-        self.players.push(Player::new(name));
-    }
-
-    pub fn deal_cards() {}
-
-    pub fn initiate_game_loop() {}
-}
-
 // Enter players
 // Set junk card threshold
 // Deal cards

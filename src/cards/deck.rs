@@ -1,4 +1,4 @@
-use crate::card::{Card, Category, Draw, Special, Suit};
+use crate::cards::card::{Card, Category, Special, Suit};
 use rand::Rng;
 
 pub struct Deck {
@@ -13,6 +13,10 @@ impl Deck {
         }
 
         new_deck
+    }
+
+    pub fn draw(&mut self) -> Card {
+        self.cards.pop().expect("Expecting a Card")
     }
 
     fn shuffle(&mut self) {
@@ -134,11 +138,5 @@ impl Deck {
             .push(Card::new(Suit::Dec, Category::Animal, Special::Bird));
         self.cards
             .push(Card::new(Suit::Dec, Category::Junk, Special::Double));
-    }
-}
-
-impl Draw for Deck {
-    fn draw(&mut self) -> Card {
-        self.cards.pop().expect("Expecting a Card")
     }
 }
