@@ -7,7 +7,7 @@ pub struct ActiveCards {
 }
 
 /// ### Cards actively in play
-/// i.e. A player's hand, the game's river
+/// i.e. A player's hand, the ame's river
 impl ActiveCards {
     pub fn new() -> ActiveCards {
         ActiveCards {

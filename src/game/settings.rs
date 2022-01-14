@@ -1,6 +1,6 @@
 use std::env;
 
-pub struct ScoreSettings {
+pub struct HouseRules {
     // Default: 0 points
     pub dec_ribbon_worth_a_point: bool,
 
@@ -23,9 +23,9 @@ pub struct ScoreSettings {
     pub zero_ribbons_doubles_loss: bool,
 }
 
-impl ScoreSettings {
-    pub fn new() -> ScoreSettings {
-        ScoreSettings {
+impl HouseRules {
+    pub fn new() -> HouseRules {
+        HouseRules {
             dec_ribbon_worth_a_point: !env::var("DEC_RIBBON_WORTH_A_POINT").is_err(),
             four_birds_is_ten_points: !env::var("FOUR_BIRDS_IS_TEN_POINTS").is_err(),
             may_animal_can_be_double_junk: !env::var("MAY_ANIMAL_CAN_BE_DOUBLE_JUNK").is_err(),

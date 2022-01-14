@@ -1,4 +1,4 @@
 target
 .idea
+.vscode
 go-stop-rust.iml
-

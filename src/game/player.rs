@@ -8,7 +8,7 @@ pub struct Player {
     pub chips: i32,
     pub go: i32,
     pub shakes: i32,
-    hand: ActiveCards,
+    pub hand: ActiveCards,
 }
 
 impl Player {
