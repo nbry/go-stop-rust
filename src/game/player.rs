@@ -1,6 +1,5 @@
 use crate::cards::active::ActiveCards;
 use crate::cards::capture_pile::CapturePile;
-
 pub struct Player {
     pub name: String,
     pub active: bool,
@@ -23,6 +22,8 @@ impl Player {
             hand: ActiveCards::new(),
         }
     }
+
+    // pub fn play_card(suit: Suit) {}
 
     // fn pay_player(&mut self, &mut other_player: &Player) {}
 }

@@ -1,17 +1,17 @@
 pub mod player;
+mod round;
 mod score;
 pub mod settings;
 
-use crate::cards::active::ActiveCards;
-use crate::cards::deck::Deck;
-use crate::game::player::Player;
-use settings::HouseRules;
-use std::io;
+use player::Player;
+use round::Round;
+use settings::Settings;
+use std::{collections::VecDeque, io};
 
 pub fn run() {
     let mut game = Game::new();
     game.add_players();
-    game.deal_cards();
+    game.initiate_game_loop();
 }
 
 // new game *
@@ -43,26 +43,27 @@ pub fn run() {
 //  game is manually ended
 
 pub struct Game {
-    players: Vec<Player>,
-    whose_turn: usize,
-    deck: Deck,
-    river: ActiveCards,
-    house_rules: HouseRules,
+    players: VecDeque<Player>,
+    round_number: i8,
+    // scoreboard
+    settings: Settings,
 }
 
 impl Game {
     pub fn new() -> Game {
         Game {
-            players: Vec::new(),
-            whose_turn: 0,
-            deck: Deck::new(true),
-            river: ActiveCards::new(),
-            house_rules: HouseRules::new(),
+            players: VecDeque::new(),
+            round_number: 0,
+            settings: Settings::new(),
         }
     }
 
     pub fn add_players(&mut self) {
-        // TODO: Make configurable number of players
+        /*
+        TODO: Make configurable number of players
+        TODO: Configure prompts
+        TODO: Allow "exit" command"
+        */
         const NUM_PLAYERS: i8 = 2;
 
         for i in 1..=NUM_PLAYERS {
@@ -75,35 +76,22 @@ impl Game {
     }
 
     fn add_player(&mut self, name: String) {
-        self.players.push(Player::new(name));
+        self.players.push_back(Player::new(name));
     }
 
-    pub fn deal_cards(&mut self) {
-        /*
-        TODO: Deal cards in traditional way
-        TODO: Make configurable, based on number of players
-        */
-        const STARTING_NUM_CARDS_IN_HAND: i8 = 10;
-        const STARTING_NUM_CARDS_IN_RIVER: i8 = 10;
-
-        for player in self.players.iter_mut() {
-            for _i in 0..STARTING_NUM_CARDS_IN_HAND {
-                player.hand.add_card(self.deck.draw());
+    fn a_player_has_zero_chips(&self) -> bool {
+        for player in &self.players {
+            if player.chips == 0 {
+                return true;
             }
         }
-
-        for _i in 0..STARTING_NUM_CARDS_IN_RIVER {
-            self.river.add_card(self.deck.draw());
-        }
+        false
     }
 
-    pub fn next_turn(&mut self) {
-        if self.whose_turn == self.players.len() - 1 {
-            self.whose_turn = 0;
-        } else {
-            self.whose_turn += 1;
+    pub fn initiate_game_loop(&mut self) {
+        while self.round_number < self.settings.number_of_rounds || !self.a_player_has_zero_chips()
+        {
+            Round::run(&mut self.players);
         }
     }
-
-    pub fn initiate_game_loop() {}
 }

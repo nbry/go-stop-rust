@@ -1,7 +1,7 @@
 use go_stop_rust::cards::active::ActiveCards;
+use go_stop_rust::cards::capture_pile;
 use go_stop_rust::cards::card::{Card, Suit};
 use go_stop_rust::cards::deck::Deck;
-use go_stop_rust::cards::{capture_pile, card, deck};
 
 #[test]
 fn count_points_for_entire_deck() {
@@ -38,7 +38,7 @@ fn active_cards() {
     let cards_in_river_count = river
         .cards
         .get(&Suit::Dec)
-        .expect("ard with suit Dec")
+        .expect("card with suit Dec")
         .len();
 
     assert_eq!(cards_in_river_count, 4)

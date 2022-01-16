@@ -16,7 +16,7 @@ impl Deck {
     }
 
     pub fn draw(&mut self) -> Card {
-        self.cards.pop().expect("Expecting a Card")
+        self.cards.pop().expect("Deck has no cards remaining")
     }
 
     fn shuffle(&mut self) {
@@ -140,3 +140,7 @@ impl Deck {
             .push(Card::new(Suit::Dec, Category::Junk, Special::Double));
     }
 }
+
+// pub struct Deal {
+
+// }
