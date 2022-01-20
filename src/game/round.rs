@@ -1,43 +1,41 @@
-use std::collections::VecDeque;
-
 use crate::cards::{active::ActiveCards, deck::Deck};
 
-use super::player::Player;
+use super::player::Players;
 
 pub struct Round<'a> {
     deck: Deck,
     river: ActiveCards,
-    players: &'a mut VecDeque<Player>,
+    players: &'a mut Players,
 }
 
 impl Round<'_> {
-    pub fn run(players: &mut VecDeque<Player>) {
+    pub fn run(players: &mut Players) {
         let mut round = Round {
             deck: Deck::new(true),
             river: ActiveCards::new(),
             players,
         };
 
-        round.deal_cards(false)
+        round.deal_cards()
     }
 
-    fn deal_cards(&mut self, tap: bool) {
-        /*
-        TODO: Deal cards in traditional way
-        TODO: Make configurable, based on number of players
-        */
-        const STARTING_NUM_CARDS_IN_HAND: i8 = 10;
-        const STARTING_NUM_CARDS_IN_RIVER: i8 = 10;
+    fn deal_cards(&mut self) {
+        // /*
+        // TODO: Deal cards in traditional way
+        // TODO: Make configurable, based on number of players
+        // */
+        // const STARTING_NUM_CARDS_IN_HAND: i8 = 10;
+        // const STARTING_NUM_CARDS_IN_RIVER: i8 = 10;
 
-        for player in self.players.iter_mut() {
-            for _i in 0..STARTING_NUM_CARDS_IN_HAND {
-                player.hand.add_card(self.deck.draw());
-            }
-        }
+        // for player in self.players.all.iter_mut() {
+        //     for _i in 0..STARTING_NUM_CARDS_IN_HAND {
+        //         player.hand.add_card(self.deck.draw());
+        //     }
+        // }
 
-        for _i in 0..STARTING_NUM_CARDS_IN_RIVER {
-            self.river.add_card(self.deck.draw());
-        }
+        // for _i in 0..STARTING_NUM_CARDS_IN_RIVER {
+        //     self.river.add_card(self.deck.draw());
+        // }
     }
 
     fn draw_cards_and_move_to_active(
@@ -50,12 +48,5 @@ impl Round<'_> {
         }
     }
 
-    fn next_turn(&mut self) {
-        let previous_player = self
-            .players
-            .pop_front()
-            .expect("Players in round empty... for some reason");
-
-        self.players.push_back(previous_player);
-    }
+    fn next_turn(&mut self) {}
 }

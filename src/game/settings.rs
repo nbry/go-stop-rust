@@ -29,7 +29,7 @@ pub struct Settings {
 impl Settings {
     pub fn new() -> Settings {
         Settings {
-            number_of_rounds: if !env::var("NUMBER_OF_ROUNDS").is_err() {
+            number_of_rounds: if env::var("NUMBER_OF_ROUNDS").is_err() {
                 10
             } else {
                 env::var("NUMBER_OF_ROUNDS")

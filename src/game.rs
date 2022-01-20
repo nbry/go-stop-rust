@@ -3,14 +3,12 @@ mod round;
 mod score;
 pub mod settings;
 
-use player::Player;
+use player::Players;
 use round::Round;
 use settings::Settings;
-use std::{collections::VecDeque, io};
 
 pub fn run() {
     let mut game = Game::new();
-    game.add_players();
     game.initiate_game_loop();
 }
 
@@ -43,53 +41,27 @@ pub fn run() {
 //  game is manually ended
 
 pub struct Game {
-    players: VecDeque<Player>,
+    players: Players,
     round_number: i8,
-    // scoreboard
     settings: Settings,
 }
 
 impl Game {
     pub fn new() -> Game {
-        Game {
-            players: VecDeque::new(),
+        let mut new_game = Game {
+            players: Players::new(),
             round_number: 0,
             settings: Settings::new(),
-        }
-    }
+        };
 
-    pub fn add_players(&mut self) {
-        /*
-        TODO: Make configurable number of players
-        TODO: Configure prompts
-        TODO: Allow "exit" command"
-        */
-        const NUM_PLAYERS: i8 = 2;
+        new_game.players.add_players();
 
-        for i in 1..=NUM_PLAYERS {
-            print!("\r");
-            let mut player_name = String::new();
-            println!("Enter name of Player {}", i);
-            io::stdin().read_line(&mut player_name).expect("a string");
-            self.add_player(player_name);
-        }
-    }
-
-    fn add_player(&mut self, name: String) {
-        self.players.push_back(Player::new(name));
-    }
-
-    fn a_player_has_zero_chips(&self) -> bool {
-        for player in &self.players {
-            if player.chips == 0 {
-                return true;
-            }
-        }
-        false
+        new_game
     }
 
     pub fn initiate_game_loop(&mut self) {
-        while self.round_number < self.settings.number_of_rounds || !self.a_player_has_zero_chips()
+        while self.round_number < self.settings.number_of_rounds
+            || !self.players.a_player_has_zero_chips()
         {
             Round::run(&mut self.players);
         }
