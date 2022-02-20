@@ -1,4 +1,4 @@
-use crate::cards::card::Card;
+use crate::game::cards::card::Card;
 
 struct Capture {
     matches: Vec<Card>,

@@ -1,9 +1,10 @@
-use crate::cards::card::{Card, Category, Special, Suit};
+use crate::game::cards::card::{Card, Category, Special, Suit};
 use rand::Rng;
 
 pub struct Deck {
     cards: Vec<Card>,
 }
+
 impl Deck {
     pub fn new(shuffle: bool) -> Self {
         let mut new_deck = Deck { cards: vec![] };
@@ -140,7 +141,3 @@ impl Deck {
             .push(Card::new(Suit::Dec, Category::Junk, Special::Double));
     }
 }
-
-// pub struct Deal {
-
-// }

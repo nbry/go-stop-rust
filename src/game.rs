@@ -1,16 +1,13 @@
-pub mod player;
+pub mod cards;
+mod player;
 mod round;
 mod score;
-pub mod settings;
+mod settings;
 
 use player::Players;
-use round::Round;
 use settings::Settings;
 
-pub fn run() {
-    let mut game = Game::new();
-    game.initiate_game_loop();
-}
+use self::round::run_pre_play;
 
 // new game *
 //  game settings *
@@ -40,30 +37,25 @@ pub fn run() {
 //  someone gives up
 //  game is manually ended
 
-pub struct Game {
+struct Game {
     players: Players,
     round_number: i8,
     settings: Settings,
 }
 
-impl Game {
-    pub fn new() -> Game {
-        let mut new_game = Game {
-            players: Players::new(),
-            round_number: 0,
-            settings: Settings::new(),
-        };
+pub fn run_game_loop() {
+    let mut game = Game {
+        players: Players::new(),
+        round_number: 0,
+        settings: Settings::new(),
+    };
 
-        new_game.players.add_players();
+    game.players.add_players();
 
-        new_game
-    }
-
-    pub fn initiate_game_loop(&mut self) {
-        while self.round_number < self.settings.number_of_rounds
-            || !self.players.a_player_has_zero_chips()
-        {
-            Round::run(&mut self.players);
-        }
+    while game.round_number < game.settings.number_of_rounds
+        || !game.players.a_player_has_zero_chips()
+    {
+        let mut round = run_pre_play(game.players);
+        game.players = round.run_round();
     }
 }

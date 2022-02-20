@@ -1,4 +1,4 @@
-use crate::cards::card::{Card, Suit};
+use crate::game::cards::card::{Card, Suit};
 use std::collections::HashMap;
 
 #[derive(Debug)]

@@ -1,4 +1,4 @@
-use crate::cards::card::{Card, Category, Special, Suit};
+use crate::game::cards::card::{Card, Category, Special, Suit};
 
 #[derive(Debug)]
 pub struct CapturePile {
