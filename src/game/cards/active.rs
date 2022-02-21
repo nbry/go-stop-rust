@@ -1,13 +1,13 @@
 use crate::game::cards::card::{Card, Suit};
 use std::collections::HashMap;
 
+/// Cards that are visible to at least one player
+/// i.e. A player's hand, the game's river
 #[derive(Debug)]
 pub struct ActiveCards {
     pub cards: HashMap<Suit, Vec<Card>>,
 }
 
-/// ### Cards actively in play
-/// i.e. A player's hand, the ame's river
 impl ActiveCards {
     pub fn new() -> ActiveCards {
         ActiveCards {

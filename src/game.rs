@@ -4,22 +4,14 @@ mod round;
 mod score;
 mod settings;
 
+use self::round::run_round;
 use player::Players;
 use settings::Settings;
+use std::io;
 
-use self::round::run_pre_play;
-
-// new game *
-//  game settings *
-//  game state *
-//  load deck *
-// add players *
-//  io: player's name *
-//  player capture pile *
-// last player cuts deck
-// last player sees bottom card
-// cards are dealt
-// game loop begin:
+/// TODO:
+/// - Last player cuts deck
+/// - Last player peeks bottom card
 //  print player hand and river
 //  io: player's choice (choice is fixed pre-flip, for now)
 //  match cards (if any)
@@ -55,7 +47,11 @@ pub fn run_game_loop() {
     while game.round_number < game.settings.number_of_rounds
         || !game.players.a_player_has_zero_chips()
     {
-        let mut round = run_pre_play(game.players);
-        game.players = round.run_round();
+        run_round(game.players);
+        game.players = Players::new();
+
+        let mut pause = String::new();
+        println!("EXECUTION PAUSED FOR DEBUGGING");
+        io::stdin().read_line(&mut pause).expect("a string");
     }
 }

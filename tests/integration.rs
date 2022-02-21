@@ -1,9 +1,11 @@
-use go_stop_rust::cards::active::ActiveCards;
-use go_stop_rust::cards::capture_pile;
-use go_stop_rust::cards::card::{Card, Suit};
-use go_stop_rust::cards::deck::Deck;
+use go_stop_rust::game::cards::active::ActiveCards;
+use go_stop_rust::game::cards::capture_pile;
+use go_stop_rust::game::cards::card::{Card, Suit};
+use go_stop_rust::game::cards::deck::Deck;
 
 #[test]
+/// A capture pile with every card in the deck totals to 63 points,
+/// excluding multipliers
 fn count_points_for_entire_deck() {
     let mut deck = Deck::new(true);
     let mut stack_of_cards: Vec<Card> = Vec::new();

@@ -39,6 +39,10 @@
 - The Shake -> double
 - Go 3 (and every additional) -> double
 
+### Selling
+- 4 players, if forced to not play, can sell Bright, Shake (2x) (if Bright)
+- 5 players, can sell Bright, Double Junk, and Shake (2x)
+
 ***
 
 ## House Rules

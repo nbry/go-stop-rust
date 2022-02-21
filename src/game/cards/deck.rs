@@ -1,6 +1,7 @@
 use crate::game::cards::card::{Card, Category, Special, Suit};
 use rand::Rng;
 
+#[derive(Debug)]
 pub struct Deck {
     cards: Vec<Card>,
 }

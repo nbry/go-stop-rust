@@ -4,17 +4,18 @@ use crate::game::cards::active::ActiveCards;
 use crate::game::cards::capture_pile::CapturePile;
 use crate::game::cards::deck::Deck;
 
+/// Contains state for an active player in a round
 #[derive(Debug)]
-pub struct Active {
+pub struct ActiveState {
     hand: ActiveCards,
     captures: CapturePile,
     go: i32,
     shakes: i32,
 }
 
-impl Active {
-    fn new() -> Active {
-        Active {
+impl ActiveState {
+    fn new() -> ActiveState {
+        ActiveState {
             hand: ActiveCards::new(),
             captures: CapturePile::new(),
             go: 0,
@@ -23,13 +24,14 @@ impl Active {
     }
 }
 
-/// Player identity struct, persists through game
+/// Player identity struct, persists through game.
+/// Player is actively in play if active is not None.
 #[derive(Debug)]
 pub struct Player {
     pub id: usize,
     pub name: String,
     pub chips: i32,
-    pub active: Option<Active>,
+    pub active: Option<ActiveState>,
 }
 
 impl Player {
@@ -43,6 +45,7 @@ impl Player {
     }
 }
 
+/// Responsible for all actions regarding a game's players
 #[derive(Debug)]
 pub struct Players {
     players: Vec<Player>,
@@ -57,10 +60,6 @@ impl Players {
             dealer: 0,
             turn: 0,
         }
-    }
-
-    pub fn num_players(self) -> usize {
-        self.players.len()
     }
 
     pub fn add_players(&mut self) {
@@ -114,6 +113,8 @@ impl Players {
 
     ///Deal cards in traditional way.
     pub fn deal_cards(&mut self, tap: bool, deck: &mut Deck, river: &mut ActiveCards) {
+        self.activate_all_players();
+
         let mut deal = match self.players.len() {
             2 => {
                 if tap {
@@ -134,14 +135,13 @@ impl Players {
         while deal.len() != 0 {
             let num_cards = deal.pop().unwrap();
 
-            for _i in 1..num_cards {
+            for _i in 0..num_cards {
                 river.add_card(deck.draw());
             }
-
             let num_cards = deal.pop().unwrap();
 
             for player in self.players.iter_mut() {
-                for _i in 1..num_cards {
+                for _i in 0..num_cards {
                     player.active.as_mut().unwrap().hand.add_card(deck.draw());
                 }
             }
@@ -155,5 +155,22 @@ impl Players {
             }
         }
         false
+    }
+
+    /// Get the index of the last player in the round
+    pub fn last_player(self) -> usize {
+        if self.turn as i8 - 1 < 0 {
+            return self.players.len() - 1 as usize;
+        }
+
+        self.turn - 1
+    }
+
+    fn activate_all_players(&mut self) {
+        for player in self.players.iter_mut() {
+            player.active = Some(ActiveState::new());
+        }
+
+        println!("ALL PLAYERS ACTIVATED");
     }
 }
